@@ -1,58 +1,57 @@
+import { useState } from 'react';
 import React from 'react';
 import css from './ContactForm.module.css';
 
-class ContactForm extends React.Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export const ContactForm = ({ addContactCallback }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleChange = event => {
+  const handleChange = event => {
     const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
+    if (name === 'name') {
+      setName(value);
+    } else if (name === 'number') {
+      setNumber(value);
+    }
   };
-  handleSubmit = event => {
-    event.preventDefault();
-    
-    this.props.addContactCallback(this.state.name, this.state.number);
 
-    this.setState({ name: '', number: '' });
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    addContactCallback(name, number);
+
+    setNumber('');
+    setName('');
   };
-  render() {
-    // const nameInputId = nanoid();
-    return (
-      <form onSubmit={this.handleSubmit} className={css.contactForm}>
-        <label>
-          Name
-          <input
-            className={css.inputText}
-            type="text"
-            name="name"
-            value={this.state.name}
-            onChange={this.handleChange}
-            // pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            // title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-            // required
-            // id={nameInputId}
-          />
-        </label>
-        <label>
-          Number
-          <input
-            className={css.inputText}
-            type="tel"
-            name="number"
-            value={this.state.number}
-            onChange={this.handleChange}
-            // pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            // title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            // required
-          />
-        </label>
-        <button type="submit" className={css.formButton}>Add contact</button>
-      </form>
-    );
-  }
-}
+
+  return (
+    <form onSubmit={handleSubmit} className={css.contactForm}>
+      <label>
+        Name
+        <input
+          className={css.inputText}
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Number
+        <input
+          className={css.inputText}
+          type="tel"
+          name="number"
+          value={number}
+          onChange={handleChange}
+        />
+      </label>
+      <button type="submit" className={css.formButton}>
+        Add contact
+      </button>
+    </form>
+  );
+};
+
 
 export default ContactForm;
